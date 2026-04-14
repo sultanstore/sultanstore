@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sultan Store - Premium Top Up</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins,Arial;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:white;
+}
+
+/* HEADER */
+header{
+  padding:18px;
+  text-align:center;
+  font-weight:bold;
+  background:linear-gradient(135deg,#facc15,#eab308);
+  color:black;
+  font-size:20px;
+}
+
+/* HERO */
+.hero{
+  padding:20px;
+  text-align:center;
+}
+.hero-box{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:15px;
+}
+
+/* GAME LIST (VERTICAL) */
+.game-list{
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.game-card{
+  background:linear-gradient(135deg,#1e293b,#0f172a);
+  border:1px solid rgba(255,255,255,0.05);
+  padding:15px;
+  border-radius:15px;
+  cursor:pointer;
+  transition:0.2s;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+.game-card span{
+  font-size:12px;
+  color:#94a3b8;
+}
+.game-card:hover{
+  transform:scale(1.02);
+  border-color:#facc15;
+}
+
+/* ITEM LIST */
+.item-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  padding:15px;
+}
+
+.item{
+  background:#0f172a;
+  border:1px solid rgba(255,255,255,0.05);
+  padding:12px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.item:hover{
+  background:#1e293b;
+  transform:scale(1.03);
+}
+
+/* BUTTON */
+.btn{
+  background:linear-gradient(135deg,#facc15,#eab308);
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-content{
+  background:#0f172a;
+  padding:20px;
+  border-radius:15px;
+  width:85%;
+  max-width:350px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
+  outline:none;
+  background:#1e293b;
+  color:white;
+}
+
+.small{
+  font-size:12px;
+  color:#94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<header>👑 SULTAN STORE PREMIUM</header>
+
+<div class="hero">
+  <div class="hero-box">
+    ⚡ Top Up Game Termurah & Tercepat<br>
+    💎 MLBB • FF • Roblox
+  </div>
+</div>
+
+<!-- GAME MENU (VERTICAL FIXED) -->
+<div class="game-list">
+
+  <div class="game-card" onclick="openGame('MLBB')">
+    🎮 Mobile Legends
+    <span>Diamond MLBB</span>
+  </div>
+
+  <div class="game-card" onclick="openGame('FF')">
+    🔥 Free Fire
+    <span>Diamond Free Fire</span>
+  </div>
+
+  <div class="game-card" onclick="openGame('RBX')">
+    🧱 Roblox
+    <span>Robux Roblox</span>
+  </div>
+
+</div>
+
+<!-- ITEM -->
+<div id="items" class="item-grid"></div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="title">Checkout</h3>
+    
+    <input id="idInput" placeholder="Masukkan ID / Username">
+
+    <div class="small">Pilih item sudah otomatis</div>
+
+    <button class="btn" onclick="checkout()">Beli via WhatsApp</button>
+    <button class="btn" style="margin-top:10px;background:#334155;color:white;" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<script>
+const wa = "6281381475599";
+let game = "";
+let selectedItem = "";
+
+const data = {
+  "MLBB":[
+    "11 💎 - 3.000",
+    "50 💎 - 15.000",
+    "86 💎 - 20.000",
+    "172 💎 - 40.000",
+    "257 💎 - 65.000",
+    "344 💎 - 85.000",
+    "429 💎 - 105.000",
+    "514 💎 - 125.000"
+  ],
+
+  "FF":[
+    "5 DM - 1.000",
+    "10 DM - 2.000",
+    "20 DM - 4.000",
+    "50 DM - 8.000",
+    "100 DM - 16.000",
+    "140 DM - 21.000"
+  ],
+
+  "RBX":[
+    "10 R$ - 5.000",
+    "80 R$ - 15.000",
+    "200 R$ - 28.000"
+  ]
+};
+
+function openGame(g){
+  game = g;
+  let container = document.getElementById("items");
+  container.innerHTML = "";
+
+  data[g].forEach(i=>{
+    let div = document.createElement("div");
+    div.className="item";
+    div.innerHTML=i;
+    div.onclick=()=>{
+      selectedItem=i;
+      document.getElementById("modal").style.display="flex";
+      document.getElementById("title").innerText="Checkout "+game;
+    };
+    container.appendChild(div);
+  });
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+function checkout(){
+  let id = document.getElementById("idInput").value;
+  if(!id) return alert("Isi ID dulu!");
+
+  let invoice = "INV"+Math.floor(Math.random()*999999);
+
+  let text =
+`🧾 ORDER SULTAN STORE
+No: ${invoice}
+Game: ${game}
+ID: ${id}
+Item: ${selectedItem}
+
+Terima kasih 🙏`;
+
+  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(text)}`);
+}
+</script>
+
+</body>
+</html>
